@@ -388,6 +388,19 @@ def accuracy(y, t):
     acc = result.mean()
     return Variable(as_array(acc))
 
+
+def dropout(x, dropout_ratio=0.5):
+    x = as_variable(x)
+
+    if dezero.Config.train:
+        mask = np.random.rand(*x.shape) > dropout_ratio
+        scale = np.array(1.0 - dropout_ratio).astype(x.dtype)
+        y = x * mask / scale
+        return y
+    else:
+        return x
+
+
 class Max(Function):
     def __init__(self, axis=None, keepdims=False):
         self.axis = axis
